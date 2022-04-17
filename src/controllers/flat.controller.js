@@ -14,6 +14,8 @@ router.post("/", async (req,res)=>{
     }
 })
 
+
+
 router.get("/", async (req,res)=>{
     try{
         let {q, filter, sort, page} = req.query;
@@ -64,6 +66,17 @@ router.get("/", async (req,res)=>{
     }
 })
 
+router.get("/allflats", async(req,res)=>{
+    try{
+        const flats = await Flat.find().lean().exec();
+
+        return res.status(200).send(flats);
+        
+    }catch(er){
+        return res.status(500).send(er.message)
+    }
+    
+})
 router.get("/:id", async (req,res)=>{
     try{
         const flat = await Flat.findById(req.params.id).lean().exec()
