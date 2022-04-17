@@ -16,7 +16,8 @@ router.post("/", async (req,res)=>{
 
 router.get("/", async (req,res)=>{
     try{
-        let {q, filter, sort} = req.query;
+        let {q, filter, sort, page} = req.query;
+        
 
         let flats = await Flat.find().lean().exec()
 
@@ -30,7 +31,7 @@ router.get("/", async (req,res)=>{
 
         if(filter){
             flats = flats.filter((el)=>{
-                if(flats.residentType===filter){
+                if(el.residentType===filter){
                     return el;
                 }
             })
@@ -44,6 +45,16 @@ router.get("/", async (req,res)=>{
                 flats = flats.sort((a,b)=>b.number-a.number);
             }
         }
+        page = req.query.page || 1;
+        let size = 5;
+        let lowerlim = (page-1)*5;
+        let upperlim = lowerlim+5;
+        flats = flats.filter((el,i)=>{
+            if(i>=lowerlim && i<upperlim){
+                return el;
+            }
+        })
+        console.log(flats)
 
         return res.status(200).send(flats);
                 

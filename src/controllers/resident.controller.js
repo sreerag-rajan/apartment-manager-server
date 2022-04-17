@@ -42,7 +42,7 @@ router.get("/:id", async (req,res)=>{
 })
 router.get("/flat/:id", async (req,res)=>{
     try{
-        const resident = await Resident.find({flat:req.params.id}).lean().exec()
+        const resident = await Resident.find({flat:req.params.id}).populate("flat").lean().exec()
 
         return res.status(200).send(resident);
                 
@@ -63,6 +63,7 @@ router.patch("/:id", async (req,res)=>{
 })
 router.delete("/:id", async (req,res)=>{
     try{
+        console.log(req.params.id)
         let resident = await Resident.findById(req.params.id).lean().exec()
         console.log(resident.flat)
         let flat = await Flat.findById(resident.flat).lean().exec();
